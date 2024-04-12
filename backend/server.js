@@ -44,33 +44,6 @@ app.post("/login", (req, res) => {
 });
 
 
-// API to create a new event
-app.post("/event", (req, res) => {
-    const { event_name, event_category, description, time, date, location_id, contact_phone, contact_email, is_private, is_rso_event } = req.body;
-    const sql = "INSERT INTO Events (event_name, event_category, description, time, date, location_id, contact_phone, contact_email, is_private, is_rso_event) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(sql, [event_name, event_category, description, time, date, location_id, contact_phone, contact_email, is_private, is_rso_event], (err, result) => {
-        if (err) {
-            console.error("Error creating event:", err);
-            res.status(500).json({ error: "Error creating event" });
-        } else {
-            res.status(200).json({ message: "Event created successfully" });
-        }
-    });
-});
-
-// API to get all events
-app.get("/events", (req, res) => {
-    const sql = "SELECT * FROM Events";
-    db.query(sql, (err, result) => {
-        if (err) {
-            console.error("Error fetching events:", err);
-            res.status(500).json({ error: "Error fetching events" });
-        } else {
-            res.status(200).json(result);
-        }
-    });
-});
-
 // Route for fetching list of RSOS
 app.get("/rso", (req, res) => {
     const sql = "SELECT * FROM RSOs";
@@ -83,20 +56,18 @@ app.get("/rso", (req, res) => {
     });
 });
 
-// // Route for fetching events for a selected RSO
-// app.get("/rso/:rsoId/events", (req, res) => {
-//     const rsoId = req.params.rsoId;
-//     const sql = "SELECT * FROM Events WHERE rso_id = ?";
-//     db.query(sql, [rsoId], (err, data) => {
-//         if (err) {
-//             console.error('Error fetching events:', err);
-//             return res.status(500).json({ error: "Error fetching events" });
-//         }
-//         return res.status(200).json(data);
-//     });
-// });
-
-
+// Route for fetching events for a selected RSO
+app.get("/rso/:rsoId/events", (req, res) => {
+    const rsoId = req.params.rsoId;
+    const sql = "SELECT * FROM Events WHERE rso_id = ?";
+    db.query(sql, [rsoId], (err, data) => {
+        if (err) {
+            console.error('Error fetching events:', err);
+            return res.status(500).json({ error: "Error fetching events" });
+        }
+        return res.status(200).json(data);
+    });
+});
 
 // Route for creating a new RSO
 app.post("/rso", (req, res) => {
@@ -125,6 +96,18 @@ app.put("/rso/:rsoId", (req, res) => {
     });
 });
 
+// Route for deleting an existing RSO
+app.delete("/rso/:rsoId", (req, res) => {
+    const rsoId = req.params.rsoId;
+    const sql = "DELETE FROM RSOs WHERE rso_id = ?";
+    db.query(sql, [rsoId], (err, data) => {
+        if (err) {
+            console.error('Error deleting RSO:', err);
+            return res.status(500).json({ error: "Error deleting RSO" });
+        }
+        return res.status(200).json({ message: "RSO deleted successfully" });
+    });
+});
 
 // Route for creating a new event
 app.post("/events", (req, res) => {
@@ -139,16 +122,16 @@ app.post("/events", (req, res) => {
     });
 });
 
-// Route for deleting an existing RSO
-app.delete("/rso/:rsoId", (req, res) => {
-    const rsoId = req.params.rsoId;
-    const sql = "DELETE FROM RSOs WHERE rso_id = ?";
-    db.query(sql, [rsoId], (err, data) => {
+// API to get all events
+app.get("/events", (req, res) => {
+    const sql = "SELECT * FROM Events";
+    db.query(sql, (err, result) => {
         if (err) {
-            console.error('Error deleting RSO:', err);
-            return res.status(500).json({ error: "Error deleting RSO" });
+            console.error("Error fetching events:", err);
+            res.status(500).json({ error: "Error fetching events" });
+        } else {
+            res.status(200).json(result);
         }
-        return res.status(200).json({ message: "RSO deleted successfully" });
     });
 });
 
@@ -205,8 +188,6 @@ app.get("/events/:eventId/comments", (req, res) => {
         return res.status(200).json(data);
     });
 });
-
-// Add more APIs as needed...
 
 app.listen(8081, () => { console.log("Server is running on port 8081"); });
 
