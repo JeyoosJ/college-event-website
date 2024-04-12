@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './styles/Login.css'; // Import CSS file for custom styles
 
 const Login = ({ handleLoginSuccess }) => {
     const [loginUsername, setLoginUsername] = useState('');
@@ -57,43 +58,53 @@ const Login = ({ handleLoginSuccess }) => {
 
     return (
         <div>
-            <div>
-                <h1>Login</h1>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={loginUsername}
-                    onChange={(e) => setLoginUsername(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                />
-                <button onClick={handleLogin}>Login</button>
-            </div>
-            <div>
-                <h1>Register</h1>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={registerUsername}
-                    onChange={(e) => setRegisterUsername(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={registerPassword}
-                    onChange={(e) => setRegisterPassword(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="student, admin or super_admin"
-                    value={user_level}
-                    onChange={(e) => setUserLevel(e.target.value)}
-                />
-                <button onClick={handleRegister}>Register</button>
+            <h1 className="title">College Events</h1>
+            <div className="login-container">
+                <div className="login-box">
+                    <div className="login-form">
+                        <h1>Login</h1>
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="Username"
+                            value={loginUsername}
+                            onChange={(e) => setLoginUsername(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            className="form-control mb-2"
+                            placeholder="Password"
+                            value={loginPassword}
+                            onChange={(e) => setLoginPassword(e.target.value)}
+                        />
+                        <button className="btn btn-primary" onClick={handleLogin}>Login</button>
+                    </div>
+                    <div className="register-form">
+                        <h1>Register</h1>
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="Username"
+                            value={registerUsername}
+                            onChange={(e) => setRegisterUsername(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            className="form-control mb-2"
+                            placeholder="Password"
+                            value={registerPassword}
+                            onChange={(e) => setRegisterPassword(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            className="form-control mb-2"
+                            placeholder="student, admin or super_admin"
+                            value={user_level}
+                            onChange={(e) => setUserLevel(e.target.value)}
+                        />
+                        <button className="btn btn-primary" onClick={handleRegister}>Register</button>
+                    </div>
+                </div>
             </div>
         </div>
     );
