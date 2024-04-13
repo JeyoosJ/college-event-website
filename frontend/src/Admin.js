@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/Admin.css'; // Import the CSS file
+import './styles/Admin.css';
 
 const Admin = ({ user }) => {
     const [rsoName, setRsoName] = useState('');
@@ -16,13 +16,11 @@ const Admin = ({ user }) => {
     const [locations, setLocations] = useState([]);
     const [rsos, setRsos] = useState([]);
 
-    // Fetch events and locations from the server on component mount
     useEffect(() => {
         fetchEvents();
         fetchRsos();
     });
 
-    // Function to fetch RSOs from the server
     const fetchRsos = () => {
         axios.get('http://localhost:8081/rso')
             .then(response => {
@@ -33,7 +31,6 @@ const Admin = ({ user }) => {
             });
     };
 
-    // Function to fetch events from the server
     const fetchEvents = () => {
         axios.get('http://localhost:8081/events')
             .then(response => {
@@ -44,7 +41,6 @@ const Admin = ({ user }) => {
             });
     };
 
-    // Function to handle RSO creation
     const handleCreateRso = () => {
         axios.post('http://localhost:8081/rso', { name: rsoName, admin_id: user.UID, university_id: 1 })
             .then(response => {
@@ -52,13 +48,12 @@ const Admin = ({ user }) => {
                 alert('RSO created successfully');
                 setRsoName('');
             })
-            .catch(error => {
+            .catch(error => { 
                 console.error('Error creating RSO:', error);
                 alert('Error creating RSO');
             });
     };
 
-    // Function to handle RSO deletion
     const handleDeleteRso = (rsoId) => {
         axios.delete(`http://localhost:8081/rso/${rsoId}`)
             .then(response => {
@@ -72,7 +67,6 @@ const Admin = ({ user }) => {
             });
     };
 
-    // Function to handle event creation
     const handleCreateEvent = () => {
         axios.post('http://localhost:8081/events', {
             event_name: eventName,
@@ -105,13 +99,12 @@ const Admin = ({ user }) => {
             });
     };
 
-    // Function to handle event deletion
     const handleDeleteEvent = (eventId) => {
         axios.delete(`http://localhost:8081/events/${eventId}`)
             .then(response => {
                 console.log('Event deleted successfully:', response.data);
                 alert('Event deleted successfully');
-                fetchEvents(); // Refresh events after deletion
+                fetchEvents();
             })
             .catch(error => {
                 console.error('Error deleting event:', error);
@@ -165,7 +158,6 @@ const Admin = ({ user }) => {
                 <div className="item">
                     <h2>RSOs</h2>
                     <ul className="list-group">
-                        {/* Display list of RSOs */}
                         {rsos.map(rso => (
                             <li key={rso.rso_id} className="list-group-item">{rso.name}
                                 <button className="btn btn-danger" onClick={() => handleDeleteRso(rso.rso_id)}>Delete</button>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/Student.css'; // Import the CSS file
+import './styles/Student.css';
 
 const Student = ({ user }) => {
     const [eventsList, setEventsList] = useState([]);
-    const [commentInputs, setCommentInputs] = useState({}); // State to manage comment inputs for each event
+    const [commentInputs, setCommentInputs] = useState({});
     const [editingComment, setEditingComment] = useState('');
 
-    useEffect(() => {   
+    useEffect(() => {
         fetchEvents();
     }, []);
 
@@ -15,7 +15,6 @@ const Student = ({ user }) => {
         try {
             const response = await axios.get('http://localhost:8081/events');
             const eventsData = response.data;
-            // Fetch comments for each event
             const eventsWithComments = await Promise.all(eventsData.map(async event => {
                 const commentsResponse = await fetchCommentsForEvent(event.eventId); // Change 'event.event_id' to 'event.eventId'
                 event.comments = commentsResponse.data;
@@ -25,7 +24,7 @@ const Student = ({ user }) => {
         } catch (error) {
             console.error('Error fetching events:', error);
         }
-    };    
+    };
 
     const fetchCommentsForEvent = async (eventId) => {
         try {
@@ -49,16 +48,14 @@ const Student = ({ user }) => {
             })
             .catch(error => console.error('Error fetching comments:', error));
     };
-    
-    
+
+
     const handleCommentSubmit = (eventId) => {
-        // Submit comment for the selected event
         axios.post(`http://localhost:8081/events/${eventId}/comments`, { text: commentInputs[eventId], user_id: user.UID, event_id: eventId })
             .then(response => {
                 // Get the newly added comment from the response
                 const newCommentData = response.data;
-    
-                // Find the event in the events list
+
                 const updatedEventsList = eventsList.map(event => {
                     if (event.event_id === eventId) {
                         // Add the new comment to the event's comments array
@@ -69,15 +66,15 @@ const Student = ({ user }) => {
                     }
                     return event;
                 });
-    
+
                 // Update the events list with the new comment
                 setEventsList(updatedEventsList);
-                setCommentInputs({...commentInputs, [eventId]: ''}); // Clear the new comment input for the specific event
+                setCommentInputs({ ...commentInputs, [eventId]: '' }); // Clear the new comment input for the specific event
                 refreshComments(eventId);
             })
             .catch(error => console.error('Error submitting comment:', error));
     };
-    
+
 
     const handleCommentEdit = (commentId, commentText) => {
         // Set the editing comment and its current text
@@ -113,7 +110,8 @@ const Student = ({ user }) => {
 
     return (
         <div>
-            <div className="banner">Events</div> {/* Banner */}
+            <div className="banner">Student Dashboard</div>
+            <div className="banner">Events</div>
             <div className="container">
                 <ul className="list-group">
                     {eventsList.map(event => (
@@ -124,7 +122,7 @@ const Student = ({ user }) => {
                                 type="text"
                                 placeholder="Add a comment"
                                 value={commentInputs[event.event_id] || ''} // Use commentInputs state for each event
-                                onChange={(e) => setCommentInputs({...commentInputs, [event.event_id]: e.target.value})} // Update specific event's comment input
+                                onChange={(e) => setCommentInputs({ ...commentInputs, [event.event_id]: e.target.value })} // Update specific event's comment input
                             />
                             <button className="btn btn-primary" onClick={() => handleCommentSubmit(event.event_id)}>Submit Comment</button>
                             <ul className="list-group">
@@ -134,7 +132,7 @@ const Student = ({ user }) => {
                                             <input
                                                 type="text"
                                                 value={commentInputs[event.event_id] || ''}
-                                                onChange={(e) => setCommentInputs({...commentInputs, [event.event_id]: e.target.value})}
+                                                onChange={(e) => setCommentInputs({ ...commentInputs, [event.event_id]: e.target.value })}
                                             />
                                         ) : (
                                             <div>{comment.text}</div>
