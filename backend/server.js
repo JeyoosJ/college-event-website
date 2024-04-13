@@ -164,10 +164,10 @@ app.delete("/events/:eventId", (req, res) => {
 
 // Route for adding comments to an event
 app.post("/events/:eventId/comments", (req, res) => {
-    const eventId = req.params.eventId;
-    const { comment } = req.body;
-    const sql = "INSERT INTO Comments (event_id, text) VALUES (?, ?)";
-    db.query(sql, [eventId, comment], (err, data) => {
+    const event_id = req.params.eventId;
+    const { user_id, text } = req.body; 
+    const sql = "INSERT INTO Comments (event_id, user_id, text) VALUES (?, ?, ?)";
+    db.query(sql, [event_id, user_id, text], (err, data) => {
         if (err) {
             console.error('Error adding comment:', err);
             return res.status(500).json({ error: "Error adding comment" });
@@ -176,11 +176,12 @@ app.post("/events/:eventId/comments", (req, res) => {
     });
 });
 
+
 // Route for fetching comments for an event
 app.get("/events/:eventId/comments", (req, res) => {
-    const eventId = req.params.eventId;
+    const event_id = req.params.eventId;
     const sql = "SELECT * FROM Comments WHERE event_id = ?";
-    db.query(sql, [eventId], (err, data) => {
+    db.query(sql, [event_id], (err, data) => {
         if (err) {
             console.error('Error fetching comments:', err);
             return res.status(500).json({ error: "Error fetching comments" });
@@ -188,6 +189,39 @@ app.get("/events/:eventId/comments", (req, res) => {
         return res.status(200).json(data);
     });
 });
+
+// Route for updating a comment
+app.put("/events/:eventId/comments/:commentId", (req, res) => {
+    const eventId = req.params.eventId;
+    const { comment_id, text } = req.body;
+    const sql = "UPDATE Comments SET text = ? WHERE event_id = ? AND comment_id = ?";
+    db.query(sql, [text, eventId, comment_id], (err, data) => {
+        if (err) {
+            console.error('Error updating comment:', err);
+            return res.status(500).json({ error: "Error updating comment" });
+        }
+        return res.status(200).json({ message: "Comment updated successfully" });
+    });
+});
+
+// Route for deleting a comment
+app.delete("/events/:eventId/comments/:commentId", (req, res) => {
+    const eventId = req.params.eventId;
+    const commentId = req.params.commentId;
+    const sql = "DELETE FROM Comments WHERE event_id = ? AND comment_id = ?";
+    db.query(sql, [eventId, commentId], (err, result) => {
+        if (err) {
+            console.error('Error deleting comment:', err);
+            return res.status(500).json({ error: "Error deleting comment" });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+        return res.status(200).json({ message: "Comment deleted successfully" });
+    });
+});
+
+
 
 app.listen(8081, () => { console.log("Server is running on port 8081"); });
 
