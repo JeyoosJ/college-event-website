@@ -1,29 +1,66 @@
-/* Admin.css */
-/* Admin.css */
-
-/* Admin.css */
-
 body {
-    margin: 0;
-    padding: 0;
-    height: 100vh; /* Set height to 100% of viewport height */
-    width: 110vw;
+    margin: 0px;
+    padding: 0px;
     color: white;
+    background-size: cover;
 }
+
 
 .container {
     padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
+.container-item {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.title {
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    width: 400px;
+    padding: 10px;
+    align-items: flex-start;
+    justify-content: center;
+
+    border: solid 5px;
+    border-radius: 15px;
+}
+
+
+.create {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
 
 
 .form-group {
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .list-group-item {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    width: 300px;
 }

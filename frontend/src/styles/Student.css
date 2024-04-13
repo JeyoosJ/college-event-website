@@ -11,29 +11,36 @@ body {
 .container {
     max-width: 800px;
     margin: auto;
+    display: flex;
+    flex-direction: row;
 }
 
 .mb-4 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 15px;
 }
 
 .mb-2 {
-    margin-bottom: 0.75rem;
+    margin-bottom: 15px;
 }
 
 .list-group{
+    width: 700px;
     margin: 15px;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 
 .list-group-item {
     margin: 15px;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .list-group-item:last-child {
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
 
 .btn-primary {

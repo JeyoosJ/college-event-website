@@ -4,8 +4,7 @@ import './styles/Student.css'; // Import the CSS file
 
 const Student = ({ user }) => {
     const [eventsList, setEventsList] = useState([]);
-    const [newComment, setNewComment] = useState('');
-    const [updatedComment, setUpdatedComment] = useState('');
+    const [commentInputs, setCommentInputs] = useState({}); // State to manage comment inputs for each event
     const [editingComment, setEditingComment] = useState('');
 
     useEffect(() => {   
@@ -54,7 +53,7 @@ const Student = ({ user }) => {
     
     const handleCommentSubmit = (eventId) => {
         // Submit comment for the selected event
-        axios.post(`http://localhost:8081/events/${eventId}/comments`, { text: newComment, user_id: user.UID, event_id: eventId })
+        axios.post(`http://localhost:8081/events/${eventId}/comments`, { text: commentInputs[eventId], user_id: user.UID, event_id: eventId })
             .then(response => {
                 // Get the newly added comment from the response
                 const newCommentData = response.data;
@@ -73,7 +72,7 @@ const Student = ({ user }) => {
     
                 // Update the events list with the new comment
                 setEventsList(updatedEventsList);
-                setNewComment(''); // Clear the new comment input
+                setCommentInputs({...commentInputs, [eventId]: ''}); // Clear the new comment input for the specific event
                 refreshComments(eventId);
             })
             .catch(error => console.error('Error submitting comment:', error));
@@ -83,19 +82,16 @@ const Student = ({ user }) => {
     const handleCommentEdit = (commentId, commentText) => {
         // Set the editing comment and its current text
         setEditingComment(commentId);
-        setUpdatedComment(commentText);
     };
 
     const handleCommentUpdate = (eventId, commentId) => {
-        console.log(eventId, commentId);
         // Update comment for the selected event
-        axios.put(`http://localhost:8081/events/${eventId}/comments/${commentId}`, { text: updatedComment, comment_id: commentId })
+        axios.put(`http://localhost:8081/events/${eventId}/comments/${commentId}`, { text: commentInputs[eventId], comment_id: commentId })
             .then(response => {
                 // Refresh comments for the selected event
                 refreshComments(eventId);
                 // Reset editing comment state
                 setEditingComment('');
-                setUpdatedComment('');
             })
             .catch(error => console.error('Error updating comment:', error));
     };
@@ -127,8 +123,8 @@ const Student = ({ user }) => {
                             <input
                                 type="text"
                                 placeholder="Add a comment"
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
+                                value={commentInputs[event.event_id] || ''} // Use commentInputs state for each event
+                                onChange={(e) => setCommentInputs({...commentInputs, [event.event_id]: e.target.value})} // Update specific event's comment input
                             />
                             <button className="btn btn-primary" onClick={() => handleCommentSubmit(event.event_id)}>Submit Comment</button>
                             <ul className="list-group">
@@ -137,8 +133,8 @@ const Student = ({ user }) => {
                                         {editingComment === comment.comment_id ? (
                                             <input
                                                 type="text"
-                                                value={updatedComment}
-                                                onChange={(e) => setUpdatedComment(e.target.value)}
+                                                value={commentInputs[event.event_id] || ''}
+                                                onChange={(e) => setCommentInputs({...commentInputs, [event.event_id]: e.target.value})}
                                             />
                                         ) : (
                                             <div>{comment.text}</div>

@@ -19,9 +19,8 @@ const Admin = ({ user }) => {
     // Fetch events and locations from the server on component mount
     useEffect(() => {
         fetchEvents();
-        fetchLocations();
         fetchRsos();
-    }, []);
+    });
 
     // Function to fetch RSOs from the server
     const fetchRsos = () => {
@@ -42,17 +41,6 @@ const Admin = ({ user }) => {
             })
             .catch(error => {
                 console.error('Error fetching events:', error);
-            });
-    };
-
-    // Function to fetch locations from the server
-    const fetchLocations = () => {
-        axios.get('http://localhost:8081/locations')
-            .then(response => {
-                setLocations(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching locations:', error);
             });
     };
 
@@ -133,44 +121,59 @@ const Admin = ({ user }) => {
 
     return (
         <div className="container">
-            <h2>Create RSO</h2>
-            <div className="form-group">
-                <input type="text" className="form-control" placeholder="RSO Name" value={rsoName} onChange={(e) => setRsoName(e.target.value)} />
-                <button className="btn btn-primary" onClick={handleCreateRso}>Create RSO</button>
+            <div className="title">
+                Admin Dashboard
             </div>
+            <div className="container-item">
+                <div className="item">
+                    <div className="create">
+                        <h2>Create RSO</h2>
+                        <div className="form-group">
+                            <input type="text" className="form-control" placeholder="RSO Name" value={rsoName} onChange={(e) => setRsoName(e.target.value)} />
+                            <button className="btn btn-primary" onClick={handleCreateRso}>Create RSO</button>
+                        </div>
+                    </div>
 
-            <h2>Create Event</h2>
-            <div className="form-group">
-                <input type="text" className="form-control" placeholder="Event Name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
-                <input type="text" className="form-control" placeholder="Event Category: social/fundraising/tech_talks/other" value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
-                <input type="text" className="form-control" placeholder="Description" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
-                <input type="datetime-local" className="form-control" placeholder="Time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} />
-                <input type="date" className="form-control" placeholder="Date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
-                <input type="text" className="form-control" placeholder="Location ID" value={eventLocationId} onChange={(e) => setEventLocationId(e.target.value)} />
-                <input type="text" className="form-control" placeholder="Contact Phone" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
-                <input type="text" className="form-control" placeholder="Contact Email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
-                <button className="btn btn-primary" onClick={handleCreateEvent}>Create Event</button>
+                    <div className="create">
+                        <h2>Create Event</h2>
+                        <div className="form-group">
+                            <input type="text" className="form-control" placeholder="Event Name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Event Category: social/fundraising/tech_talks/other" value={eventCategory} onChange={(e) => setEventCategory(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Description" value={eventDescription} onChange={(e) => setEventDescription(e.target.value)} />
+                            <input type="datetime-local" className="form-control" placeholder="Time" value={eventTime} onChange={(e) => setEventTime(e.target.value)} />
+                            <input type="date" className="form-control" placeholder="Date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Location ID" value={eventLocationId} onChange={(e) => setEventLocationId(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Contact Phone" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Contact Email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
+                            <button className="btn btn-primary" onClick={handleCreateEvent}>Create Event</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="item">
+                    <h2>Events</h2>
+                    <ul className="list-group">
+                        {events.map(event => (
+                            <li key={event.event_id} className="list-group-item">
+                                {event.event_name} - {event.event_category}
+                                <button className="btn btn-danger" onClick={() => handleDeleteEvent(event.event_id)}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="item">
+                    <h2>RSOs</h2>
+                    <ul className="list-group">
+                        {/* Display list of RSOs */}
+                        {rsos.map(rso => (
+                            <li key={rso.rso_id} className="list-group-item">{rso.name}
+                                <button className="btn btn-danger" onClick={() => handleDeleteRso(rso.rso_id)}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
-
-            <h2>Events</h2>
-            <ul className="list-group">
-                {events.map(event => (
-                    <li key={event.event_id} className="list-group-item">
-                        {event.event_name} - {event.event_category}
-                        <button className="btn btn-danger" onClick={() => handleDeleteEvent(event.event_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-
-            <h2>RSOs</h2>
-            <ul className="list-group">
-                {/* Display list of RSOs */}
-                {rsos.map(rso => (
-                    <li key={rso.rso_id} className="list-group-item">{rso.name}
-                        <button className="btn btn-danger" onClick={() => handleDeleteRso(rso.rso_id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };
