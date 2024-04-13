@@ -1,0 +1,29 @@
+/* Admin.css */
+/* Admin.css */
+
+/* Admin.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Set height to 100% of viewport height */
+    width: 110vw;
+    color: white;
+}
+
+.container {
+    padding: 20px;
+}
+
+
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
